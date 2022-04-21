@@ -1,0 +1,23 @@
+version: '2.1'
+services:
+  web:
+    image: alerta/alerta-web
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/alerta
+      - AUTH_REQUIRED=True
+      - CUSTOMER_VIEWS=True
+      - ADMIN_USERS=admin@example.com
+      - ADMIN_PASSWORD=password
+      - ADMIN_KEY=demo-key
+    restart: always
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: alerta
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: always

@@ -1,0 +1,10 @@
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Create Alerta customer
+    community.general.alerta_customer:
+      alerta_url: "http://localhost:8080"
+      api_username: admin@example.com
+      api_password: password
+      customer: Developer
+      match: dev@example.com
