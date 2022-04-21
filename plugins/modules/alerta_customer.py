@@ -11,7 +11,7 @@ DOCUMENTATION = '''
 ---
 module: alerta_customer
 short_description: Manage customers in Alerta via the REST API
-version_added: 3.1.0
+version_added: 4.8.0
 description:
   - Create or delete customers in Alerta.
 author: Christian Wollinger (@cwollinger)
