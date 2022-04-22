@@ -6,7 +6,7 @@ __metaclass__ = type
 import json
 import pytest
 from ansible_collections.community.general.tests.unit.compat.mock import Mock, patch
-from ansible_collections.cwollinger.alerta.plugins.modules import alerta_customer
+from ansible_collections.community.general.plugins.modules import alerta_customer
 from ansible_collections.community.general.tests.unit.plugins.modules.utils import AnsibleExitJson, AnsibleFailJson, ModuleTestCase, set_module_args
 
 
@@ -225,7 +225,7 @@ class TestAlertaCustomerModule(ModuleTestCase):
         })
 
         with patch.object(alerta_customer, "fetch_url") as fetch_url_mock:
-            fetch_url_mock.return_value = customer_response_page1()
+            fetch_url_mock.return_value = customer_response_page2()
             with self.assertRaises(AnsibleExitJson):
                 self.module.main()
 
