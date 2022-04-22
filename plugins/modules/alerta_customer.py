@@ -122,12 +122,19 @@ class AlertaInterface(object):
         self.module.fail_json(failed=True, response=info, msg="Alerta API error with HTTP %d for %s" % (status_code, url))
 
     def get_customers(self):
-        url = "%s/api/customers" % (self.alerta_url)
+        url = "%s/api/customers" % self.alerta_url
         response = self.send_request(url)
+        pages = response["pages"]
+        if pages > 1:
+            for page in range(1, pages):
+                page += 1
+                url = url + '?page=' + str(page)
+                new_results = self.send_request(url)
+                response.update(new_results)
         return response
 
     def create_customers(self):
-        url = "%s/api/customer" % (self.alerta_url)
+        url = "%s/api/customer" % self.alerta_url
 
         payload = {
             'customer': self.customer,
