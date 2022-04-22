@@ -31,7 +31,14 @@ def customer_response():
             "href": "http://localhost:8080/api/customer/188ed093-84cc-4f46-bf80-4c9127180d9c",
             "id": "188ed093-84cc-4f46-bf80-4c9127180d9c",
             "match": "dev@example.com"
-        }]})
+        }],
+        "more": true,
+        "page": 1,
+        "pageSize": 50,
+        "pages": 1,
+        "status": "ok",
+        "total": 2})
+
     return (MockedReponse(server_response), {"status": 200})
 
 
