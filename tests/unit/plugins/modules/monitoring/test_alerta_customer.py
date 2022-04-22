@@ -40,6 +40,7 @@ def customer_response_page1():
         "total": 2})
     return (MockedReponse(server_response), {"status": 200})
 
+
 def customer_response_page2():
     server_response = json.dumps({"customers": [
         {
