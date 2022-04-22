@@ -32,7 +32,7 @@ def customer_response():
             "id": "188ed093-84cc-4f46-bf80-4c9127180d9c",
             "match": "dev@example.com"
         }],
-        "more": true,
+        "more": True,
         "page": 1,
         "pageSize": 50,
         "pages": 1,
