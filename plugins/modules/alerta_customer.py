@@ -10,10 +10,10 @@ __metaclass__ = type
 DOCUMENTATION = '''
 ---
 module: alerta_customer
-short_description: Manage customers in Alerta via the REST API
+short_description: Manage customers in Alerta
 version_added: 4.8.0
 description:
-  - Create or delete customers in Alerta.
+  - Create or delete customers in Alerta with the REST API.
 author: Christian Wollinger (@cwollinger)
 seealso:
   - name: API documentation
@@ -117,7 +117,7 @@ class AlertaInterface(object):
             self.module.fail_json(failed=True, response=info, msg="Permission Denied for '%s' on '%s'" % (method, url))
         elif status_code == 404:
             self.module.fail_json(failed=True, response=info, msg="Not found for request '%s' on '%s'" % (method, url))
-        elif status_code == 200 or status_code == 201:
+        elif status_code in (200, 201):
             return self.module.from_json(response.read())
         self.module.fail_json(failed=True, response=info, msg="Alerta API error with HTTP %d for %s" % (status_code, url))
 
@@ -133,7 +133,7 @@ class AlertaInterface(object):
                 response.update(new_results)
         return response
 
-    def create_customers(self):
+    def create_customer(self):
         url = "%s/api/customer" % self.alerta_url
 
         payload = {
@@ -145,13 +145,13 @@ class AlertaInterface(object):
         response = self.send_request(url, payload, 'POST')
         return response
 
-    def delete_customers(self, id):
+    def delete_customer(self, id):
         url = "%s/api/customer/%s" % (self.alerta_url, id)
 
         response = self.send_request(url, None, 'DELETE')
         return response
 
-    def check_customer(self, customer):
+    def find_customer_id(self, customer):
         for i in customer['customers']:
             if self.customer == i['customer'] and self.match == i['match']:
                 return i['id']
@@ -178,20 +178,20 @@ def main():
 
     if alerta_iface.state == 'present':
         response = alerta_iface.get_customers()
-        if alerta_iface.check_customer(response):
+        if alerta_iface.find_customer_id(response):
             module.exit_json(changed=False, response=response, msg="Customer %s already exists" % alerta_iface.customer)
         else:
             if module.check_mode:
                 module.exit_json(changed=True, response=response, msg="Customer %s created" % alerta_iface.customer)
-            response = alerta_iface.create_customers()
+            response = alerta_iface.create_customer()
             module.exit_json(changed=True, response=response, msg="Customer %s created" % alerta_iface.customer)
     else:
         response = alerta_iface.get_customers()
-        id = alerta_iface.check_customer(response)
+        id = alerta_iface.find_customer_id(response)
         if id:
             if module.check_mode:
                 module.exit_json(changed=True, response=response, msg="Customer %s with id %s deleted" % (alerta_iface.customer, id))
-            alerta_iface.delete_customers(id)
+            alerta_iface.delete_customer(id)
             module.exit_json(changed=True, response=response, msg="Customer %s with id %s deleted" % (alerta_iface.customer, id))
         else:
             module.exit_json(changed=False, response=response, msg="Customer %s does not exists" % alerta_iface.customer)
