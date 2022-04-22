@@ -18,7 +18,7 @@ class MockedReponse(object):
         return self.data
 
 
-def customer_response():
+def customer_response_page1():
     server_response = json.dumps({"customers": [
         {
             "customer": "admin",
@@ -38,7 +38,28 @@ def customer_response():
         "pages": 1,
         "status": "ok",
         "total": 2})
+    return (MockedReponse(server_response), {"status": 200})
 
+def customer_response_page2():
+    server_response = json.dumps({"customers": [
+        {
+            "customer": "admin",
+            "href": "http://localhost:8080/api/customer/d89664a7-9c87-4ab9-8be8-830e7e5f0616",
+            "id": "d89664a7-9c87-4ab9-8be8-830e7e5f0616",
+            "match": "admin@example.com"
+        },
+        {
+            "customer": "Developer",
+            "href": "http://localhost:8080/api/customer/188ed093-84cc-4f46-bf80-4c9127180d9c",
+            "id": "188ed093-84cc-4f46-bf80-4c9127180d9c",
+            "match": "dev@example.com"
+        }],
+        "more": True,
+        "page": 2,
+        "pageSize": 50,
+        "pages": 2,
+        "status": "ok",
+        "total": 52})
     return (MockedReponse(server_response), {"status": 200})
 
 
@@ -82,7 +103,7 @@ class TestAlertaCustomerModule(ModuleTestCase):
         })
 
         with patch.object(alerta_customer, "fetch_url") as fetch_url_mock:
-            fetch_url_mock.return_value = customer_response()
+            fetch_url_mock.return_value = customer_response_page1()
             with self.assertRaises(AnsibleExitJson):
                 self.module.main()
             self.assertTrue(fetch_url_mock.call_count, 1)
@@ -98,7 +119,7 @@ class TestAlertaCustomerModule(ModuleTestCase):
         })
 
         with patch.object(alerta_customer, "fetch_url") as fetch_url_mock:
-            fetch_url_mock.return_value = customer_response()
+            fetch_url_mock.return_value = customer_response_page1()
             with self.assertRaises(AnsibleExitJson):
                 self.module.main()
 
@@ -117,7 +138,7 @@ class TestAlertaCustomerModule(ModuleTestCase):
         })
 
         with patch.object(alerta_customer, "fetch_url") as fetch_url_mock:
-            fetch_url_mock.return_value = customer_response()
+            fetch_url_mock.return_value = customer_response_page1()
             with self.assertRaises(AnsibleExitJson):
                 self.module.main()
 
@@ -187,7 +208,24 @@ class TestAlertaCustomerModule(ModuleTestCase):
         })
 
         with patch.object(alerta_customer, "fetch_url") as fetch_url_mock:
-            fetch_url_mock.return_value = customer_response()
+            fetch_url_mock.return_value = customer_response_page1()
+            with self.assertRaises(AnsibleExitJson):
+                self.module.main()
+
+    def test_successful_customer_deletion_page2(self):
+        """Test the customer deletion on the second page."""
+
+        set_module_args({
+            'alerta_url': "http://localhost:8080",
+            'api_username': "admin@example.com",
+            'api_password': "password",
+            'customer': 'Developer',
+            'match': 'dev@example.com',
+            'state': 'absent'
+        })
+
+        with patch.object(alerta_customer, "fetch_url") as fetch_url_mock:
+            fetch_url_mock.return_value = customer_response_page1()
             with self.assertRaises(AnsibleExitJson):
                 self.module.main()
 
@@ -204,6 +242,6 @@ class TestAlertaCustomerModule(ModuleTestCase):
         })
 
         with patch.object(alerta_customer, "fetch_url") as fetch_url_mock:
-            fetch_url_mock.return_value = customer_response()
+            fetch_url_mock.return_value = customer_response_page1()
             with self.assertRaises(AnsibleExitJson):
                 self.module.main()

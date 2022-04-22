@@ -181,17 +181,15 @@ def main():
         if alerta_iface.find_customer_id(response):
             module.exit_json(changed=False, response=response, msg="Customer %s already exists" % alerta_iface.customer)
         else:
-            if module.check_mode:
-                module.exit_json(changed=True, response=response, msg="Customer %s created" % alerta_iface.customer)
-            response = alerta_iface.create_customer()
+            if not module.check_mode:
+                response = alerta_iface.create_customer()
             module.exit_json(changed=True, response=response, msg="Customer %s created" % alerta_iface.customer)
     else:
         response = alerta_iface.get_customers()
         id = alerta_iface.find_customer_id(response)
         if id:
-            if module.check_mode:
-                module.exit_json(changed=True, response=response, msg="Customer %s with id %s deleted" % (alerta_iface.customer, id))
-            alerta_iface.delete_customer(id)
+            if not module.check_mode:
+                alerta_iface.delete_customer(id)
             module.exit_json(changed=True, response=response, msg="Customer %s with id %s deleted" % (alerta_iface.customer, id))
         else:
             module.exit_json(changed=False, response=response, msg="Customer %s does not exists" % alerta_iface.customer)
