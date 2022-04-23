@@ -126,10 +126,9 @@ class AlertaInterface(object):
         response = self.send_request(url)
         pages = response["pages"]
         if pages > 1:
-            for page in range(1, pages):
-                page += 1
-                url = url + '?page=' + str(page)
-                new_results = self.send_request(url)
+            for page in range(2, pages + 1):
+                page_url = url + '?page=' + str(page)
+                new_results = self.send_request(page_url)
                 response.update(new_results)
         return response
 
