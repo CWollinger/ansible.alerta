@@ -5,4 +5,4 @@ This repository contains ansible modules for [Alerta](https://github.com/alerta/
 Github action is used for ansible tests.
 
 ## Modules:
-- [alerta_customer](https://docs.ansible.com/ansible/devel/collections/community/general/alerta_customer_module.html) Create or delete customers in Alerta with the REST API.
+- [alerta_customer](https://docs.ansible.com/ansible/latest/collections/community/general/alerta_customer_module.html) Create or delete customers in Alerta with the REST API.
