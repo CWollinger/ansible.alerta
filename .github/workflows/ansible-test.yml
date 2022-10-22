@@ -167,7 +167,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:12
         env:
           POSTGRES_DB: alerta
           POSTGRES_USER: postgres
